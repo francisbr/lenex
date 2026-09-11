@@ -1,0 +1,14 @@
+[build-system]
+requires = ["maturin>=1.9,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "lenex"
+description = "Parse and generate lenex documents."
+license = { text = "MIT" }
+requires-python = ">=3.8"
+dynamic = ["version"]
+
+[tool.maturin]
+module-name = "lenex"
+features = ["pyo3/extension-module"]

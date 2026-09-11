@@ -1,0 +1,12 @@
+[package]
+name = "lenex-py"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "lenex"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = "0.29"
+lenex = { path = "../lenex-rs" }

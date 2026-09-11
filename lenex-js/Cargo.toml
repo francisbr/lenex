@@ -1,0 +1,15 @@
+[package]
+name = "lenex-js"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+lenex = { path = "../lenex-rs" }
+napi = "3.12"
+napi-derive = "3.6"
+
+[build-dependencies]
+napi-build = "2.4"
