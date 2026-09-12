@@ -1,43 +1,62 @@
+use bon::Builder;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Default, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Builder)]
 #[serde(rename = "CONTACT")]
 pub struct Contact {
+    #[builder(start_fn, into)]
     #[serde(rename = "@email")]
     pub email: String,
 
+    #[builder(into)]
     #[serde(rename = "@city", default, skip_serializing_if = "Option::is_none")]
     pub city: Option<String>,
 
+    #[builder(into)]
     #[serde(rename = "@country", default, skip_serializing_if = "Option::is_none")]
     pub country: Option<String>,
 
+    #[builder(into)]
     #[serde(rename = "@fax", default, skip_serializing_if = "Option::is_none")]
     pub fax: Option<String>,
 
+    #[builder(into)]
     #[serde(rename = "@internet", default, skip_serializing_if = "Option::is_none")]
     pub internet: Option<String>,
 
+    #[builder(into)]
     #[serde(rename = "@name", default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
+    #[builder(into)]
     #[serde(rename = "@mobile", default, skip_serializing_if = "Option::is_none")]
     pub mobile: Option<String>,
 
+    #[builder(into)]
     #[serde(rename = "@phone", default, skip_serializing_if = "Option::is_none")]
     pub phone: Option<String>,
 
+    #[builder(into)]
     #[serde(rename = "@state", default, skip_serializing_if = "Option::is_none")]
     pub state: Option<String>,
 
+    #[builder(into)]
     #[serde(rename = "@street", default, skip_serializing_if = "Option::is_none")]
     pub street: Option<String>,
 
+    #[builder(into)]
     #[serde(rename = "@street2", default, skip_serializing_if = "Option::is_none")]
     pub street2: Option<String>,
 
+    #[builder(into)]
     #[serde(rename = "@zip", default, skip_serializing_if = "Option::is_none")]
     pub zip: Option<String>,
+}
+
+impl<S: contact_builder::IsComplete> From<ContactBuilder<S>> for Contact {
+    fn from(b: ContactBuilder<S>) -> Contact {
+        b.build()
+    }
 }
 
 #[cfg(test)]
@@ -50,6 +69,23 @@ pub mod tests {
 
     fn from_str(str: &str) -> Result<Contact, quick_xml::de::DeError> {
         quick_xml::de::from_str::<Contact>(str)
+    }
+
+    #[test]
+    fn builder() {
+        let _ = Contact::builder("a@b.c")
+            .city("city")
+            .country("country")
+            .fax("fax")
+            .internet("internet")
+            .name("name")
+            .mobile("mobile")
+            .phone("phone")
+            .state("state")
+            .street("street")
+            .street2("street2")
+            .zip("zip")
+            .build();
     }
 
     #[test]

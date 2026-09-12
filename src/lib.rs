@@ -5,4 +5,4 @@ mod file;
 mod model;
 
 pub use error::{Error, Result};
-pub use model::{Constructor, Contact, Lenex};
+pub use model::{Constructor, ConstructorBuilder, Contact, ContactBuilder, Lenex, LenexBuilder};

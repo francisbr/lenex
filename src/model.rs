@@ -1,15 +1,18 @@
+use bon::Builder;
 use serde::{Deserialize, Serialize};
 
 mod constructor;
 
-pub use constructor::{Constructor, Contact};
+pub use constructor::{Constructor, ConstructorBuilder, Contact, ContactBuilder};
 
-#[derive(Serialize, Deserialize, Debug, Default, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Builder)]
 #[serde(rename = "LENEX")]
 pub struct Lenex {
+    #[builder(start_fn, into)]
     #[serde(rename = "@version")]
     pub version: String,
 
+    #[builder(start_fn, into)]
     #[serde(rename = "CONSTRUCTOR")]
     pub constructor: Constructor,
 }
@@ -26,6 +29,15 @@ mod tests {
 
     fn from_str(str: &str) -> Result<Lenex, quick_xml::de::DeError> {
         quick_xml::de::from_str::<Lenex>(str)
+    }
+
+    #[test]
+    fn builder() {
+        let _ = Lenex::builder(
+            "3.0",
+            Constructor::builder(Contact::builder("a@b.c"), "lenex-rs", "0.0.1"),
+        )
+        .build();
     }
 
     #[test]

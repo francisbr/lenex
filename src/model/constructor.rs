@@ -1,27 +1,38 @@
-mod contact;
-
+use bon::Builder;
 use serde::{Deserialize, Serialize};
 
-pub use contact::Contact;
+mod contact;
 
-#[derive(Serialize, Deserialize, Debug, Default, PartialEq)]
+pub use contact::{Contact, ContactBuilder};
+
+#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Builder)]
 #[serde(rename = "CONSTRUCTOR")]
 pub struct Constructor {
+    #[builder(start_fn, into)]
     #[serde(rename = "CONTACT")]
     pub contact: Contact,
 
+    #[builder(start_fn, into)]
     #[serde(rename = "@name")]
     pub name: String,
 
+    #[builder(start_fn, into)]
+    #[serde(rename = "@version")]
+    pub version: String,
+
+    #[builder(into)]
     #[serde(
         rename = "@registration",
         default,
         skip_serializing_if = "Option::is_none"
     )]
     pub registration: Option<String>,
+}
 
-    #[serde(rename = "@version")]
-    pub version: String,
+impl<S: constructor_builder::IsComplete> From<ConstructorBuilder<S>> for Constructor {
+    fn from(b: ConstructorBuilder<S>) -> Constructor {
+        b.build()
+    }
 }
 
 #[cfg(test)]
@@ -35,6 +46,13 @@ mod tests {
 
     fn from_str(str: &str) -> Result<Constructor, quick_xml::de::DeError> {
         quick_xml::de::from_str::<Constructor>(str)
+    }
+
+    #[test]
+    fn builder() {
+        let _ = Constructor::builder(Contact::builder("a@b.c"), "lenex-rs", "0.0.1")
+            .registration("registration")
+            .build();
     }
 
     #[test]
