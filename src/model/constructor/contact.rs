@@ -1,0 +1,87 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Debug, Default, PartialEq)]
+#[serde(rename = "CONTACT")]
+pub struct Contact {
+    #[serde(rename = "@email")]
+    pub email: String,
+
+    #[serde(rename = "@city", default, skip_serializing_if = "Option::is_none")]
+    pub city: Option<String>,
+
+    #[serde(rename = "@country", default, skip_serializing_if = "Option::is_none")]
+    pub country: Option<String>,
+
+    #[serde(rename = "@fax", default, skip_serializing_if = "Option::is_none")]
+    pub fax: Option<String>,
+
+    #[serde(rename = "@internet", default, skip_serializing_if = "Option::is_none")]
+    pub internet: Option<String>,
+
+    #[serde(rename = "@name", default, skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
+
+    #[serde(rename = "@mobile", default, skip_serializing_if = "Option::is_none")]
+    pub mobile: Option<String>,
+
+    #[serde(rename = "@phone", default, skip_serializing_if = "Option::is_none")]
+    pub phone: Option<String>,
+
+    #[serde(rename = "@state", default, skip_serializing_if = "Option::is_none")]
+    pub state: Option<String>,
+
+    #[serde(rename = "@street", default, skip_serializing_if = "Option::is_none")]
+    pub street: Option<String>,
+
+    #[serde(rename = "@street2", default, skip_serializing_if = "Option::is_none")]
+    pub street2: Option<String>,
+
+    #[serde(rename = "@zip", default, skip_serializing_if = "Option::is_none")]
+    pub zip: Option<String>,
+}
+
+#[cfg(test)]
+pub mod tests {
+    use quick_xml::se::to_string;
+
+    use super::Contact;
+
+    pub const MINIMAL: &str = r#"<CONTACT email="a@b.c"/>"#;
+
+    fn from_str(str: &str) -> Result<Contact, quick_xml::de::DeError> {
+        quick_xml::de::from_str::<Contact>(str)
+    }
+
+    #[test]
+    fn required_attributes() {
+        from_str(r#"<CONTACT city="Montréal"/>"#).expect_err("CONTACT should have an email");
+    }
+
+    #[test]
+    fn optional_attributes() {
+        let parsed = from_str(MINIMAL).expect("CONTACT is valid");
+        assert_eq!(
+            parsed,
+            Contact {
+                email: "a@b.c".to_string(),
+                ..Contact::default()
+            }
+        );
+        assert_eq!(MINIMAL, to_string(&parsed).unwrap());
+
+        const WITH_OPTIONALS: &str = r#"<CONTACT email="a@b.c" city="Montréal" country="CAN" fax="514-555-0101" internet="https://example.org" name="Jane Doe" mobile="514-555-0102" phone="514-555-0103" state="QC" street="1 Main St" street2="Apt 2" zip="H0H0H0"/>"#;
+        let parsed = from_str(WITH_OPTIONALS).expect("CONTACT is valid");
+        assert_eq!(Some("Montréal".to_string()), parsed.city);
+        assert_eq!(Some("CAN".to_string()), parsed.country);
+        assert_eq!(Some("514-555-0101".to_string()), parsed.fax);
+        assert_eq!(Some("https://example.org".to_string()), parsed.internet);
+        assert_eq!(Some("Jane Doe".to_string()), parsed.name);
+        assert_eq!(Some("514-555-0102".to_string()), parsed.mobile);
+        assert_eq!(Some("514-555-0103".to_string()), parsed.phone);
+        assert_eq!(Some("QC".to_string()), parsed.state);
+        assert_eq!(Some("1 Main St".to_string()), parsed.street);
+        assert_eq!(Some("Apt 2".to_string()), parsed.street2);
+        assert_eq!(Some("H0H0H0".to_string()), parsed.zip);
+        assert_eq!(WITH_OPTIONALS, to_string(&parsed).unwrap());
+    }
+}

@@ -9,7 +9,7 @@ impl Lenex {
     #[napi(constructor)]
     #[allow(clippy::new_without_default)] // JS calls `new Lenex()`; a Rust `Default` would be dead code.
     pub fn new() -> Self {
-        Lenex(lenex::Lenex::new())
+        Lenex(lenex::Lenex::default())
     }
 
     #[napi(factory)]

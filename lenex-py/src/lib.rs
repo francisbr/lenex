@@ -11,7 +11,7 @@ pub struct Lenex(::lenex::Lenex);
 impl Lenex {
     #[new]
     fn new() -> Self {
-        Lenex(::lenex::Lenex::new())
+        Lenex(::lenex::Lenex::default())
     }
 
     #[staticmethod]

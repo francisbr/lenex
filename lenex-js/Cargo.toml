@@ -7,7 +7,7 @@ edition = "2024"
 crate-type = ["cdylib"]
 
 [dependencies]
-lenex = { path = "../lenex-rs" }
+lenex = { path = "../" }
 napi = "3.12"
 napi-derive = "3.6"
 
