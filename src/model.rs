@@ -5,7 +5,7 @@ mod constructor;
 
 pub use constructor::{Constructor, ConstructorBuilder, Contact, ContactBuilder};
 
-#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Builder)]
+#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Builder, Clone)]
 #[serde(rename = "LENEX")]
 pub struct Lenex {
     #[builder(start_fn, into)]
@@ -35,7 +35,7 @@ mod tests {
     fn builder() {
         let _ = Lenex::builder(
             "3.0",
-            Constructor::builder(Contact::builder("a@b.c"), "lenex-rs", "0.0.1"),
+            Constructor::builder("lenex-rs", "0.0.1", Contact::builder("a@b.c")),
         )
         .build();
     }

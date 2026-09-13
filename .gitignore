@@ -1,4 +1,7 @@
+.zed
+.vscode
+
 /target
 /Cargo.lock
-examples
+
 *.pdf

@@ -8,5 +8,5 @@ name = "lenex"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = "0.29"
 lenex = { path = "../" }
+pyo3 = { version = "0.29", features = ["extension-module"] }

@@ -1,7 +1,7 @@
 use bon::Builder;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Builder)]
+#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Builder, Clone)]
 #[serde(rename = "CONTACT")]
 pub struct Contact {
     #[builder(start_fn, into)]

@@ -5,13 +5,9 @@ mod contact;
 
 pub use contact::{Contact, ContactBuilder};
 
-#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Builder)]
+#[derive(Serialize, Deserialize, Debug, Default, PartialEq, Builder, Clone)]
 #[serde(rename = "CONSTRUCTOR")]
 pub struct Constructor {
-    #[builder(start_fn, into)]
-    #[serde(rename = "CONTACT")]
-    pub contact: Contact,
-
     #[builder(start_fn, into)]
     #[serde(rename = "@name")]
     pub name: String,
@@ -19,6 +15,10 @@ pub struct Constructor {
     #[builder(start_fn, into)]
     #[serde(rename = "@version")]
     pub version: String,
+
+    #[builder(start_fn, into)]
+    #[serde(rename = "CONTACT")]
+    pub contact: Contact,
 
     #[builder(into)]
     #[serde(
@@ -50,7 +50,7 @@ mod tests {
 
     #[test]
     fn builder() {
-        let _ = Constructor::builder(Contact::builder("a@b.c"), "lenex-rs", "0.0.1")
+        let _ = Constructor::builder("lenex-rs", "0.0.1", Contact::builder("a@b.c"))
             .registration("registration")
             .build();
     }
