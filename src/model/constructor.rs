@@ -6,21 +6,21 @@ pub mod contact;
 use contact::Contact;
 
 #[derive(Serialize, Deserialize, Debug, Default, PartialEq, Builder, Clone)]
+#[builder(on(_, into))]
 #[serde(rename = "CONSTRUCTOR")]
 pub struct Constructor {
-    #[builder(start_fn, into)]
+    #[builder(start_fn)]
     #[serde(rename = "@name")]
     pub name: String,
 
-    #[builder(start_fn, into)]
+    #[builder(start_fn)]
     #[serde(rename = "@version")]
     pub version: String,
 
-    #[builder(start_fn, into)]
+    #[builder(start_fn)]
     #[serde(rename = "CONTACT")]
     pub contact: Contact,
 
-    #[builder(into)]
     #[serde(
         rename = "@registration",
         default,

@@ -8,17 +8,18 @@ use constructor::Constructor;
 use meet::Meet;
 
 #[derive(Serialize, Deserialize, Debug, Default, PartialEq, Builder, Clone)]
+#[builder(on(_, into))]
 #[serde(rename = "LENEX")]
 pub struct Lenex {
-    #[builder(start_fn, into)]
+    #[builder(start_fn)]
     #[serde(rename = "@version")]
     pub version: String,
 
-    #[builder(start_fn, into)]
+    #[builder(start_fn)]
     #[serde(rename = "CONSTRUCTOR")]
     pub constructor: Constructor,
 
-    #[builder(into, default)]
+    #[builder(default)]
     #[serde(
         rename = "MEETS",
         with = "meet::meets_serde",

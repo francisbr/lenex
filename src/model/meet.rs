@@ -6,21 +6,22 @@ use crate::model::meet::session::Session;
 mod session;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Builder, Clone)]
+#[builder(on(_, into))]
 #[serde(rename = "MEET")]
 pub struct Meet {
-    #[builder(start_fn, into)]
+    #[builder(start_fn)]
     #[serde(rename = "@name")]
     name: String,
 
-    #[builder(start_fn, into)]
+    #[builder(start_fn)]
     #[serde(rename = "@city")]
     city: String,
 
-    #[builder(start_fn, into)]
+    #[builder(start_fn)]
     #[serde(rename = "@nation")]
     nation: String,
 
-    #[builder(start_fn, into)]
+    #[builder(start_fn)]
     #[serde(rename = "SESSIONS", with = "session::sessions_serde")]
     sessions: Vec<Session>,
 }

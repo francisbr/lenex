@@ -2,53 +2,43 @@ use bon::Builder;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Default, PartialEq, Builder, Clone)]
+#[builder(on(_, into))]
 #[serde(rename = "CONTACT")]
 pub struct Contact {
-    #[builder(start_fn, into)]
+    #[builder(start_fn)]
     #[serde(rename = "@email")]
     pub email: String,
 
-    #[builder(into)]
     #[serde(rename = "@city", default, skip_serializing_if = "Option::is_none")]
     pub city: Option<String>,
 
-    #[builder(into)]
     #[serde(rename = "@country", default, skip_serializing_if = "Option::is_none")]
     pub country: Option<String>,
 
-    #[builder(into)]
     #[serde(rename = "@fax", default, skip_serializing_if = "Option::is_none")]
     pub fax: Option<String>,
 
-    #[builder(into)]
     #[serde(rename = "@internet", default, skip_serializing_if = "Option::is_none")]
     pub internet: Option<String>,
 
-    #[builder(into)]
     #[serde(rename = "@name", default, skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 
-    #[builder(into)]
     #[serde(rename = "@mobile", default, skip_serializing_if = "Option::is_none")]
     pub mobile: Option<String>,
 
-    #[builder(into)]
     #[serde(rename = "@phone", default, skip_serializing_if = "Option::is_none")]
     pub phone: Option<String>,
 
-    #[builder(into)]
     #[serde(rename = "@state", default, skip_serializing_if = "Option::is_none")]
     pub state: Option<String>,
 
-    #[builder(into)]
     #[serde(rename = "@street", default, skip_serializing_if = "Option::is_none")]
     pub street: Option<String>,
 
-    #[builder(into)]
     #[serde(rename = "@street2", default, skip_serializing_if = "Option::is_none")]
     pub street2: Option<String>,
 
-    #[builder(into)]
     #[serde(rename = "@zip", default, skip_serializing_if = "Option::is_none")]
     pub zip: Option<String>,
 }

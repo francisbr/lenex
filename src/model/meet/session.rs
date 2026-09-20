@@ -3,13 +3,14 @@ use serde::{Deserialize, Serialize};
 use time::Date;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Builder, Clone)]
+#[builder(on(_, into))]
 #[serde(rename = "SESSION")]
 pub struct Session {
-    #[builder(start_fn, into)]
+    #[builder(start_fn)]
     #[serde(rename = "@number")]
     pub number: u32,
 
-    #[builder(start_fn, into)]
+    #[builder(start_fn)]
     #[serde(with = "crate::format::date", rename = "@date")]
     pub date: Date,
 }
