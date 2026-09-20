@@ -1,5 +1,5 @@
 // Load-bearing, not convenience: without a reference to the `lenex` rlib the linker drops it and the .node registers nothing.
-pub use ::lenex::Lenex;
+pub use ::lenex::prelude::Lenex;
 
 // `impl From<lenex::Error> for napi::Error` is illegal here: both types are foreign to this crate.
 // Convert per call site instead:

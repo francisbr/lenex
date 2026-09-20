@@ -1,9 +1,9 @@
 use bon::Builder;
 use serde::{Deserialize, Serialize};
 
-mod contact;
+pub mod contact;
 
-pub use contact::{Contact, ContactBuilder};
+use contact::Contact;
 
 #[derive(Serialize, Deserialize, Debug, Default, PartialEq, Builder, Clone)]
 #[serde(rename = "CONSTRUCTOR")]

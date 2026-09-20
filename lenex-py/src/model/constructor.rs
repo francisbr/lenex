@@ -1,5 +1,7 @@
 use pyo3::prelude::*;
 
+use ::lenex::prelude::Constructor;
+
 pub mod contact;
 
 use crate::model::constructor::contact::PyContact;
@@ -31,7 +33,7 @@ impl PyConstructor {
     }
 }
 
-impl From<&PyConstructor> for ::lenex::Constructor {
+impl From<&PyConstructor> for Constructor {
     fn from(value: &PyConstructor) -> Self {
         Self {
             name: value.name.clone(),
@@ -42,8 +44,8 @@ impl From<&PyConstructor> for ::lenex::Constructor {
     }
 }
 
-impl From<::lenex::Constructor> for PyConstructor {
-    fn from(value: ::lenex::Constructor) -> Self {
+impl From<Constructor> for PyConstructor {
+    fn from(value: Constructor) -> Self {
         Self {
             name: value.name,
             version: value.version,

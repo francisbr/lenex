@@ -1,5 +1,7 @@
 use pyo3::prelude::*;
 
+use ::lenex::prelude::Contact;
+
 #[pyclass(name = "Contact", skip_from_py_object, get_all, set_all)]
 #[derive(Clone)]
 pub struct PyContact {
@@ -53,7 +55,7 @@ impl PyContact {
     }
 }
 
-impl From<PyContact> for ::lenex::Contact {
+impl From<PyContact> for Contact {
     fn from(value: PyContact) -> Self {
         Self {
             email: value.email,
@@ -72,8 +74,8 @@ impl From<PyContact> for ::lenex::Contact {
     }
 }
 
-impl From<::lenex::Contact> for PyContact {
-    fn from(value: ::lenex::Contact) -> Self {
+impl From<Contact> for PyContact {
+    fn from(value: Contact) -> Self {
         Self {
             email: value.email,
             city: value.city,

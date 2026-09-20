@@ -1,5 +1,7 @@
 use pyo3::prelude::*;
 
+use ::lenex::prelude::{Constructor, Lenex};
+
 use crate::model::constructor::PyConstructor;
 
 #[pyclass(name = "Lenex", get_all, set_all)]
@@ -19,17 +21,18 @@ impl PyLenex {
     }
 }
 
-impl From<PyLenex> for ::lenex::Lenex {
+impl From<PyLenex> for Lenex {
     fn from(value: PyLenex) -> Self {
-        Self {
-            version: value.version,
-            constructor: Python::attach(|py| (&*value.constructor.borrow(py)).into()),
-        }
+        Lenex::builder(
+            value.version,
+            Python::attach(|py| -> Constructor { (&*value.constructor.borrow(py)).into() }),
+        )
+        .build()
     }
 }
 
-impl From<::lenex::Lenex> for PyLenex {
-    fn from(value: ::lenex::Lenex) -> Self {
+impl From<Lenex> for PyLenex {
+    fn from(value: Lenex) -> Self {
         Self {
             version: value.version,
             constructor: Python::attach(|py| {

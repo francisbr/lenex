@@ -15,5 +15,6 @@ repository = "https://github.com/francisbr/lenex"
 bon = { version = "3.10", default-features = false }
 quick-xml = { version = "0.42", default-features = false, features = ["serialize"] }
 serde = { version = "1.0", default-features = false, features = ["derive"] }
+time = { version = "0.3", default-features = false, features = ["macros", "serde-well-known"] }
 thiserror = { version = "2.0", default-features = false, features = ["std"] }
 
