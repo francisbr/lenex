@@ -5,14 +5,6 @@ use crate::model::meet::session::Session;
 
 mod session;
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
-#[serde(rename = "MEET", rename_all = "UPPERCASE")]
-pub enum NationCode {
-    Can,
-    #[serde(untagged)]
-    Unknown(String),
-}
-
 #[derive(Serialize, Deserialize, Debug, PartialEq, Builder, Clone)]
 #[serde(rename = "MEET")]
 pub struct Meet {
@@ -26,7 +18,7 @@ pub struct Meet {
 
     #[builder(start_fn, into)]
     #[serde(rename = "@nation")]
-    nation: NationCode,
+    nation: String,
 
     #[builder(start_fn, into)]
     #[serde(rename = "SESSIONS", with = "session::sessions_serde")]
@@ -68,7 +60,7 @@ mod tests {
     use quick_xml::se::to_string;
     use time::{Date, Month};
 
-    use crate::model::meet::{Meet, NationCode, session::Session};
+    use crate::model::meet::{Meet, session::Session};
 
     const MINIMAL: &str = r#"<MEET name="meet1" city="Montreal" nation="CAN"><SESSIONS><SESSION number="1" date="2025-01-02"/></SESSIONS></MEET>"#;
 
@@ -78,7 +70,7 @@ mod tests {
 
     #[test]
     fn builder() {
-        let _ = Meet::builder("meet1", "Montreal", NationCode::Can, Vec::new()).build();
+        let _ = Meet::builder("meet1", "Montreal", "CAN", Vec::new()).build();
     }
 
     #[test]
@@ -108,7 +100,7 @@ mod tests {
             Meet {
                 name: "meet1".into(),
                 city: "Montreal".into(),
-                nation: NationCode::Can,
+                nation: "CAN".into(),
                 sessions: vec![Session {
                     number: 1,
                     date: Date::from_calendar_date(2025, Month::January, 2).unwrap(),
@@ -119,7 +111,7 @@ mod tests {
 
         const UNKOWN_NATION: &str = r#"<MEET name="meet1" city="Montreal" nation="ZZZ"><SESSIONS><SESSION number="1" date="2025-01-02"/></SESSIONS></MEET>"#;
         let parsed = from_str(UNKOWN_NATION).expect("MEET is valid");
-        assert_eq!(NationCode::Unknown("ZZZ".to_string()), parsed.nation);
+        assert_eq!("ZZZ", parsed.nation);
         assert_eq!(UNKOWN_NATION, to_string(&parsed).unwrap());
     }
 }
