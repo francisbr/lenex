@@ -2,6 +2,10 @@ use bon::Builder;
 use serde::{Deserialize, Serialize};
 use time::Date;
 
+pub mod event;
+
+use event::Event;
+
 #[derive(Serialize, Deserialize, Debug, PartialEq, Builder, Clone)]
 #[builder(on(_, into))]
 #[serde(rename = "SESSION")]
@@ -13,6 +17,10 @@ pub struct Session {
     #[builder(start_fn)]
     #[serde(with = "crate::format::date", rename = "@date")]
     pub date: Date,
+
+    #[builder(start_fn)]
+    #[serde(rename = "EVENTS", with = "event::events_serde")]
+    pub events: Vec<Event>,
 }
 
 impl<S: session_builder::IsComplete> From<SessionBuilder<S>> for Session {
@@ -56,9 +64,12 @@ mod tests {
     use quick_xml::se::to_string;
     use time::{Date, Month};
 
-    use super::Session;
+    use super::{
+        Session,
+        event::{Event, swimstyle::SwimStyle},
+    };
 
-    const MINIMAL: &str = r#"<SESSION number="1" date="2025-01-02"/>"#;
+    const MINIMAL: &str = r#"<SESSION number="1" date="2025-01-02"><EVENTS><EVENT eventid="1" number="1"><SWIMSTYLE distance="25" relaycount="1" stroke="FREE"/></EVENT></EVENTS></SESSION>"#;
 
     fn from_str(str: &str) -> Result<Session, quick_xml::de::DeError> {
         quick_xml::de::from_str::<Session>(str)
@@ -69,6 +80,7 @@ mod tests {
         let _ = Session::builder(
             1_u32,
             Date::from_calendar_date(2025, Month::January, 2).unwrap(),
+            vec![Event::builder(1_u32, 1_u32, SwimStyle::builder(25_u32, 1_u32, "FREE")).build()],
         )
         .build();
     }
@@ -77,6 +89,8 @@ mod tests {
     fn required_attributes() {
         from_str(r#"<SESSION date="2025-01-02"/>"#).expect_err("SESSION should have a number");
         from_str(r#"<SESSION number="1"/>"#).expect_err("SESSION should have a date");
+        from_str(r#"<SESSION number="1" date="2025-01-02"/>"#)
+            .expect_err("SESSION should have EVENTS");
     }
 
     #[test]
@@ -87,6 +101,15 @@ mod tests {
             Session {
                 number: 1,
                 date: Date::from_calendar_date(2025, Month::January, 2).unwrap(),
+                events: vec![Event {
+                    eventid: 1,
+                    number: 1,
+                    swimstyle: SwimStyle {
+                        distance: 25,
+                        relaycount: 1,
+                        stroke: "FREE".to_string(),
+                    },
+                }],
             }
         );
         assert_eq!(MINIMAL, to_string(&parsed).unwrap());

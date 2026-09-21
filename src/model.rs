@@ -84,7 +84,7 @@ mod tests {
         );
         assert_eq!(MINIMAL, to_string(&parsed).unwrap());
 
-        const WITH_MEETS: &str = r#"<LENEX version="3.0"><CONSTRUCTOR name="n" version="1.0"><CONTACT email="a@b.c"/></CONSTRUCTOR><MEETS><MEET name="m1" city="Montreal" nation="CAN"><SESSIONS><SESSION number="1" date="2025-01-02"/></SESSIONS></MEET></MEETS></LENEX>"#;
+        const WITH_MEETS: &str = r#"<LENEX version="3.0"><CONSTRUCTOR name="n" version="1.0"><CONTACT email="a@b.c"/></CONSTRUCTOR><MEETS><MEET name="m1" city="Montreal" nation="CAN"><SESSIONS><SESSION number="1" date="2025-01-02"><EVENTS/></SESSION></SESSIONS></MEET></MEETS></LENEX>"#;
         let parsed = from_str(WITH_MEETS).expect("LENEX is valid");
         assert_eq!(1, parsed.meets.len());
         assert_eq!(WITH_MEETS, to_string(&parsed).unwrap());
